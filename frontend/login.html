@@ -27,5 +27,20 @@
         <p>Don't have an account? <a href="#">Sign up</a></p>
         
     </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event){
+            event.preventDefault();
+
+            let email=document.getElementById("email").value;
+            let password=document.getElementById("password").value;
+
+            console.log("Email entered:", email);
+            console.log("Password entered:", password);
+
+            alert("Form captured! Email: "+email);
+
+        });
+    </script>
 </body>
 </html>

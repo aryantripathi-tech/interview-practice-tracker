@@ -36,5 +36,23 @@
             
         </form>
     </div>
+
+    <script>
+        document.getElementById("questionForm").addEventListener("submit", function(event){
+            event.preventDefault();
+
+            let question={
+                title:document.getElementById("title").value,
+                company:document.getElementById("company").value,
+                topic:document.getElementById("topic").value,
+                difficulty:document.getElementById("difficulty").value,
+                notes:document.getElementById("notes").value,
+            };
+
+            console.log("Question captured:", question);
+
+            alert("Question saved! Title: "+question.title);
+        });
+    </script>
 </body>
 </html>
