@@ -1,0 +1,23 @@
+{
+  "name": "interview-practice-tracker",
+  "version": "1.0.0",
+  "description": "A full-stack web application for engineering students to log, organize, \r and analyze their interview preparation.",
+  "main": "practice.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryantripathi-tech/interview-practice-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryantripathi-tech/interview-practice-tracker/issues"
+  },
+  "homepage": "https://github.com/aryantripathi-tech/interview-practice-tracker#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
