@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-
+ 
 // POST /api/auth/signup
 router.post('/signup', function(req, res){
     let name =req.body.name;

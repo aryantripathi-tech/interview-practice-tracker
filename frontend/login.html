@@ -32,14 +32,38 @@
         document.getElementById("loginForm").addEventListener("submit", function(event){
             event.preventDefault();
 
+            // Collect form data
             let email=document.getElementById("email").value;
             let password=document.getElementById("password").value;
 
-            console.log("Email entered:", email);
-            console.log("Password entered:", password);
+            // Send to backend
+            fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            })
 
-            alert("Form captured! Email: "+email);
+            // Read the resposne
+            .then(function(response){
+                return response.json();
+            })
 
+            // Do something with the data
+            .then(function(data){
+                console.log('Response from server:', data);
+                alert(data.message);
+            })
+
+            // Handle errors
+            .catch(function(error){
+                console.log('Error:', error);
+                alert('Could not connect to server');
+            });
         });
     </script>
 </body>

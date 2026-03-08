@@ -49,9 +49,27 @@
                 notes:document.getElementById("notes").value,
             };
 
-            console.log("Question captured:", question);
+            fetch('http://localhost:3000/api/questions',{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(question)
+            })
 
-            alert("Question saved! Title: "+question.title);
+            .then(function(response){
+                return response.json();
+            })
+
+            .then(function(data) {
+                console.log('Response from server:', data);
+                alert(data.message);
+            })
+
+            .catch(function(error){
+                console.log('Error:', error);
+                alert('Could not connect to server');
+            });
         });
     </script>
 </body>
