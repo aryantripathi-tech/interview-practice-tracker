@@ -17,7 +17,7 @@ and analyze their interview preparation.
 - [x] Phase 0b: Developer Environment & Git Setup ✅
 - [x] Phase 1: JavaScript Basics ✅
 - [x] Phase 2: Frontend (HTML/CSS) ✅
-- [ ] Phase 3: Backend (Node.js + Express)
+- [x] Phase 3: Backend (Node.js + Express) ✅
 - [ ] Phase 4: Database (MongoDB)
 - [ ] Phase 5: Authentication (JWT)
 - [ ] Phase 6: Core Features
