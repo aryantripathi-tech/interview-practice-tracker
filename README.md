@@ -18,7 +18,7 @@ and analyze their interview preparation.
 - [x] Phase 1: JavaScript Basics ✅
 - [x] Phase 2: Frontend (HTML/CSS) ✅
 - [x] Phase 3: Backend (Node.js + Express) ✅
-- [ ] Phase 4: Database (MongoDB)
+- [x] Phase 4: Database (MongoDB) ✅
 - [ ] Phase 5: Authentication (JWT)
 - [ ] Phase 6: Core Features
 - [ ] Phase 7: Analytics
