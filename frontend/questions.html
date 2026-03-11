@@ -38,6 +38,21 @@
     </div>
 
     <script>
+        const BASE_URL='http://localhost:3000';
+
+        // Check if user is logged in
+        let token = localStorage.getItem('token');
+        let userName = localStorage.getItem('userName');
+
+        if(!token){
+            alert('Please login first');
+            window.location.href='login.html';
+        }
+
+        // Show username on page
+        document.querySelector('h1').textContent = 'Hello, ' + userName + ' - Log a Question';
+
+        // Hadle form submission
         document.getElementById("questionForm").addEventListener("submit", function(event){
             event.preventDefault();
 
@@ -49,12 +64,11 @@
                 notes:document.getElementById("notes").value,
             };
 
-            const BASE_URL='http://localhost:3000'
-
             fetch(BASE_URL+'/api/questions',{
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
                 },
                 body: JSON.stringify(question)
             })
@@ -64,8 +78,13 @@
             })
 
             .then(function(data) {
-                console.log('Response from server:', data);
-                alert(data.message);
+                console.log('Exact message:', JSON.stringify(data.message));
+                if(data.message === 'Question saved successfully!'){
+                    alert('Question saved!');
+                    window.location.href = 'dashboard.html';
+                } else{
+                    alert(data.message);
+                }
             })
 
             .catch(function(error){

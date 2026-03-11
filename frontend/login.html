@@ -57,8 +57,18 @@
 
             // Do something with the data
             .then(function(data){
-                console.log('Response from server:', data);
-                alert(data.message);
+                if(data.token){
+                    // Save token to localStorage
+                    localStorage.setItem('token',data.token);
+                    localStorage.setItem('userID',data.user.id);
+                    localStorage.setItem('userName',data.user.name);
+
+                    // Redirect to question page
+                    alert('Welcome back, ' + data.user.name + '!');
+                    window.location.href = 'questions.html';
+                } else{
+                    alert(data.message);
+                }
             })
 
             // Handle errors

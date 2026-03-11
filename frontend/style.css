@@ -77,3 +77,22 @@ p{
 a{
     color: #1e40af;
 }
+
+.question-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.question-card h3 {
+    color: #1e40af;
+    margin-bottom: 8px;
+}
+
+.question-card p {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #475569;
+}

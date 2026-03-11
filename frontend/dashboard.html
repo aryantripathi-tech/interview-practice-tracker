@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Interview Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>My Interview Questions</h1>
+        <p id="subtitle">Loading your questions...</p>
+
+        <button onclick="window.location.href='question.html'">
+            + Add New Question
+        </button>
+
+        <button onclick="logout()" style="background-color: #dc2626; margin-top: 8px;">
+            Logout
+        </button>
+
+        <div id="questionsList"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3000';
+
+        let token = localStorage.getItem('token');
+        let userName = localStorage.getItem('userName');
+
+        // Redirect if not logged in
+        if(!token){
+            alert('Please login first');
+            window.location.href='login.html';
+        }
+
+        document.querySelector('h1').textContent = userName + "'s Questions";
+
+        // Fetch questions on page load
+        fetch(BASE_URL + '/api/questions', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(data){
+            let questions = data.questions;
+
+            if(questions.length === 0){
+                document.getElementById('subtitle').textContent =
+                 'No questions yet. Add your first one!';
+                return;
+            }
+
+            document.getElementById('subtitle').textContent =
+             'You have logged ' + questions.length + ' questions.';
+
+            // Build HTML for each question
+            let html = '';
+            for(let question of questions){
+                html += '<div class="question-card">';
+                html += '<h3>' + question.title + '</h3>';
+                html += '<p><strong>Company:</strong> ' + question.company + '</p>';
+                html += '<p><strong>Topic:</strong> ' + question.topic + '</p>';
+                html += '<p><strong>Difficulty:</strong> ' + question.difficulty + '</p>';
+                html += '<p><strong>Notes:</strong> ' + question.notes + '</p>';
+                html += '</div>';
+            }
+
+            document.getElementById('questionList').innerHTML=html;
+        })
+        .catch(function(error){
+            console.log('Error:', error);
+        });
+
+        // Logout function
+        function logout(){
+            localStorage.removeItem('token');
+            localStorage.removeItem('userID');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -18,7 +18,7 @@ router.post('/', protect, async function(req,res){
         await newQuestion.save();
 
         res.json({
-            message: 'Question saves successfully!',
+            message: 'Question saved successfully!',
             question: newQuestion
         });
 
