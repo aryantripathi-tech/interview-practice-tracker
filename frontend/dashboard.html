@@ -61,16 +61,32 @@
             // Build HTML for each question
             let html = '';
             for(let question of questions){
-                html += '<div class="question-card">';
-                html += '<h3>' + question.title + '</h3>';
-                html += '<p><strong>Company:</strong> ' + question.company + '</p>';
-                html += '<p><strong>Topic:</strong> ' + question.topic + '</p>';
-                html += '<p><strong>Difficulty:</strong> ' + question.difficulty + '</p>';
-                html += '<p><strong>Notes:</strong> ' + question.notes + '</p>';
-                html += '</div>';
-            }
+                let card = document.createElement('div');
+                card.className= 'question-card';
+                
+                let title = document.createElement('h3');
+                title.textContent= question.title;
 
-            document.getElementById('questionList').innerHTML=html;
+                let company = document.createElement('div');
+                company.textContent= 'Company: '+ question.company;
+
+                let topic = document.createElement('div');
+                topic.textContent= 'Topic: '+ question.topic;
+
+                let difficulty = document.createElement('div');
+                difficulty.textContent= 'Difficulty: '+ question.difficulty;
+
+                let notes = document.createElement('div');
+                notes.textContent= 'Notes: '+ question.notes;
+
+                card.appendChild(title);
+                card.appendChild(company);
+                card.appendChild(topic);
+                card.appendChild(difficulty);
+                card.appendChild(notes);
+
+                document.getElementById('questionList').appendChild(card);
+            }
         })
         .catch(function(error){
             console.log('Error:', error);
