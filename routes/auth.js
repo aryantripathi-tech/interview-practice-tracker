@@ -1,5 +1,7 @@
 const express=require('express');
 const router=express.Router();
+const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 const User=require('../models/User');
 
 // POST /api/auth/signup
@@ -15,11 +17,14 @@ router.post('/signup', async function(req, res){
             return res.json({message: 'Account with this email already exists'});
         }
 
-        // Create new user
+        // Hash the password - 10 is the salt rounds
+        let hashedPassword= await bcrypt.hash(password, 10);
+
+        // Save user with hashed password
         let newUser= new User({
             name: name,
             email: email,
-            password: password
+            password: hashedPassword
         });
 
         // Save to database
@@ -52,13 +57,21 @@ router.post('/login', async function(req, res){
             return res.json({message: 'Wrong email or password'});
         }
 
-        // Check password - plain text for now
-        if(password!==user.password){
+        // Compare password with hash
+        let passwordMatch= await bcrypt.compare(password, user.password);
+        if(!passwordMatch){
             return res.json({message: 'Wrong email or password'});
         }
 
+        let token= jwt.sign(
+            {userID: user._id, name: user.name},
+            process.env.JWT_SECRET,
+            {expiresIn: '7d'}
+        );
+
         res.json({
             message: 'Login successful!',
+            token: token,
             user:{
                 id: user._id,
                 name: user.name,

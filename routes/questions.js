@@ -1,9 +1,10 @@
 const express=require('express');
 const router=express.Router();
 const Question=require('../models/Question');
+const protect=require('../middleware/auth');
 
-// POST /api/questions
-router.post('/', async function(req,res){
+// POST /api/questions - protected route
+router.post('/', protect, async function(req,res){
     try {
         let newQuestion=new Question({
             title: req.body.title,
@@ -11,7 +12,7 @@ router.post('/', async function(req,res){
             topic: req.body.topic,
             difficulty: req.body.difficulty,
             notes: req.body.notes,
-            userID: req.body.userID
+            userID: req.user.userID
         });
 
         await newQuestion.save();
@@ -27,11 +28,10 @@ router.post('/', async function(req,res){
     }
 });
 
-// GET /api/questions/:userID - get all questions for a specific user
-router.get('/:userID', async function(req,res){
+// GET /api/questions - protected route
+router.get('/', protect,  async function(req,res){
     try {
-        let userID= req.params.userID;
-        let questions= await Question.find({userID: userID});
+        let questions= await Question.find({userID: req.user.userID});
 
         res.json({
             message: 'Question fetched successfully!',
