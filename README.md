@@ -19,7 +19,7 @@ and analyze their interview preparation.
 - [x] Phase 2: Frontend (HTML/CSS) ✅
 - [x] Phase 3: Backend (Node.js + Express) ✅
 - [x] Phase 4: Database (MongoDB) ✅
-- [ ] Phase 5: Authentication (JWT)
+- [x] Phase 5: Authentication (JWT) ✅
 - [ ] Phase 6: Core Features
 - [ ] Phase 7: Analytics
 - [ ] Phase 8: Full Integration
