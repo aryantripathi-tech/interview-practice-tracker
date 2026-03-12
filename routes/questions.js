@@ -44,4 +44,31 @@ router.get('/', protect,  async function(req,res){
     }
 });
 
+// DELETE /api/questions/:id
+router.delete('/:id', protect, async function(req, res){
+    try {
+        let questionID = req.params.id;
+
+        // Find the question first
+        let question = await Question.findById(questionID);
+
+        // Does it exist?
+        if(!question){
+            return res.json({message: 'Question not found'});
+        }
+
+        // Does it belong to the logged in user?
+        if(question.userID.toString() !== req.user.userID){
+            return res.json({message: 'Not authorized to delete this question'});
+        }
+
+        // Delete it
+        await Question.findByIdAndDelete(questionID);
+
+        res.json({message: 'Question deleted successfully!'});
+    } catch(error){
+        console.log('Delete error:', error);
+        res.json({message: 'Something went wrong.'});
+    }
+});
 module.exports=router;

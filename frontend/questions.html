@@ -78,7 +78,6 @@
             })
 
             .then(function(data) {
-                console.log('Exact message:', JSON.stringify(data.message));
                 if(data.message === 'Question saved successfully!'){
                     alert('Question saved!');
                     window.location.href = 'dashboard.html';
