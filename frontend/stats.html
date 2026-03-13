@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Stats - Interview Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="pageTitle">My Interview Stats</h1>
+
+        <button onclick="window.location.href='dashboard.html'"
+            style="margin-bottom: 16px;">
+            ← Back to Dashboard
+        </button>
+
+        <!-- Total count -->
+        <div class="stat-card">
+            <h2 id="totalCount">...</h2>
+            <p>Total Questions Logged</p>
+        </div>
+
+        <!-- Difficulty breakdown -->
+        <div class="stat-card">
+            <h3>Difficulty Breakdown</h3>
+            <div id="difficultyBreakdown"></div>
+        </div>
+
+        <!-- Top companies -->
+        <div class="stat-card">
+            <h3>Top Companies</h3>
+            <div id="topCompanies"></div>
+        </div>
+
+         <!-- Top topics -->
+        <div class="stat-card">
+            <h3>Top Topics</h3>
+            <div id="topTopics"></div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="stat-card">
+            <h3>Recent Activity</h3>
+            <div id="recentActivity"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL='http://localhost:3000'
+        let token = localStorage.getItem('token');
+        let userName = localStorage.getItem('userName');
+
+        // Redirect if not logged in
+        if(!token){
+            alert('Please login first');
+            window.location.href='login.html';
+        }
+
+        document.getElementById('pageTitle').textContent = userName + "'s Interview Stats";
+
+        // Fetch stats
+        fetch(BASE_URL + '/api/questions/stats', {
+            method: 'GET',
+            headers: {'Authorization': 'Bearer '+token}
+        })
+        .then(function(response){return response.json();})
+
+        .then(function(data){
+            let stats = data.stats;
+
+            // Total
+            document.getElementById('totalCount').textContent=stats.total;
+
+            // Difficulty Breakdown
+            let diffContainer = document.getElementById('difficultyBreakdown');
+
+            let difficulties = [
+                { label: '🟢 Easy',   count: stats.difficulty.easy,   color: '#16a34a' },
+                { label: '🟡 Medium', count: stats.difficulty.medium, color: '#ca8a04' },
+                { label: '🔴 Hard',   count: stats.difficulty.hard,   color: '#dc2626' }
+            ];
+
+            for(let diff of difficulties){
+                let percent = stats.total>0?Math.round((diff.count/stats.total)*100):0;
+
+                let row = document.createElement('div');
+                row.style.marginBottom='12px';
+
+                let label = document.createElement('div');
+                label.style.display='flex';
+                label.style.justifyContent='space-between';
+                label.style.marginBottom='4px';
+
+                let labelText = document.createElement('span');
+                labelText.textContent=diff.label;
+
+                let countText = document.createElement('span');
+                countText.textContent=diff.count + ' ('+ percent +'%)';
+                countText.style.color='#64748b';
+
+                label.appendChild(labelText);
+                label.appendChild(countText);
+                
+                // Progress bar
+                let barBg = document.createElement('div');
+                barBg.style.backgroundColor = '#e2e8f0';
+                barBg.style.borderRadius = '4px';
+                barBg.style.height = '8px';
+                barBg.style.width = '100%';
+
+                let barFill = document.createElement('div');
+                barFill.style.backgroundColor=diff.color;
+                barFill.style.borderRadius='4px';
+                barFill.style.height='8px';
+                barFill.style.width=percent+'%';
+                barFill.style.transition='width 0.6s ease';
+
+                barBg.appendChild(barFill);
+                row.appendChild(label);
+                row.appendChild(barBg);
+                diffContainer.appendChild(row);
+            }
+
+            // Top Companies
+            let companiesContainer=document.getElementById('topCompanies');
+            let companyCounts = stats.companyCounts;
+
+            // Sort companies by count descending
+            let sortedCompanies = Object.keys(companyCounts).sort(function(a,b){
+                return companyCounts[b] - companyCounts[a];
+            });
+
+            if(sortedCompanies.length===0){
+                let msg = document.createElement('p');
+                msg.textContent= 'No companies logged yet.';
+                msg.style.color='#94a3b8';
+                companiesContainer.appendChild(msg);
+            }
+            else{
+                for(let company of sortedCompanies.slice(0, 5)){
+                    let row = document.createElement('div');
+                    row.style.display = 'flex';
+                    row.style.justifyContent = 'space-between';
+                    row.style.padding = '6px 0';
+                    row.style.borderBottom = '1px solid #f1f5f9';
+
+                    let name = document.createElement('span');
+                    name.textContent=company;
+
+                    let count = document.createElement('span');
+                    count.textContent = companyCounts[company] + ' questions';
+                    count.style.color = '#64748b';
+
+                    row.appendChild(name);
+                    row.appendChild(count);
+                    companiesContainer.appendChild(row);
+                }
+            }
+
+            // Top topics
+            let topicsContainer = document.getElementById('topTopics');
+            let topicCounts = stats.topicCounts;
+
+            let sortedTopics = Object.keys(topicCounts).sort(function(a, b){
+                return topicCounts[b] - topicCounts[a];
+            });
+
+            if(sortedTopics === 0){
+                let msg = document.createElement('p');
+                msg.textContent = 'No topics logged yet.';
+                msg.style.color = '#94a3b8';
+                topicsContainer.appendChild(msg);
+            }
+            else{
+                for(let topic of sortedTopics.slice(0,5)){
+                    let row = document.createElement('div');
+                    row.style.display = 'flex';
+                    row.style.justifyContent = 'space-between';
+                    row.style.padding = '6px 0';
+                    row.style.borderBottom = '1px solid #f1f5f9';
+
+                    let name = document.createElement('span');
+                    name.textContent = topic;
+
+                    let count = document.createElement('span');
+                    count.textContent = topicCounts[topic] + ' questions';
+                    count.style.color = '#64748b';
+
+                    row.appendChild(name);
+                    row.appendChild(count);
+                    topicsContainer.appendChild(row);
+                }
+            }
+
+            // Recent Activity
+            let recentContainer = document.getElementById('recentActivity');
+
+            for(let question of stats.recent){
+                let row = document.createElement('div');
+                row.style.padding = '8px 0';
+                row.style.borderBottom = '1px solid #f1f5f9';
+
+                let title = document.createElement('p');
+                title.textContent = question.title;
+                title.style.fontWeight = 'bold';
+                title.style.margin = '0';
+
+                let meta = document.createElement('p');
+                let date = new Date(question.createdAt)
+                    .toLocaleDateString('en-IN', {
+                        day:'numeric', month:'short', year:'numeric'
+                    });
+                meta.textContent = question.company + ' . ' + question.difficulty + ' . ' + date;
+                meta.style.color = '#64748b';
+                meta.style.fontSize ='13px';
+                meta.style.margin = '2px 0 0 0';
+
+                row.appendChild(title);
+                row.appendChild(meta);
+                recentContainer.appendChild(row);
+            }
+        })
+        .catch(function(error){
+            console.log('Stats error:', error);
+        });
+    </script>
+</body>
+</html>

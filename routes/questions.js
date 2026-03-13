@@ -28,6 +28,78 @@ router.post('/', protect, async function(req,res){
     }
 });
 
+// GET /api/questions/stats - get analytics for logged in user
+router.get('/stats', protect, async function(req, res){
+    try {
+        let userID = req.user.userID;
+        
+        //Fetch all questions for this user
+        let questions = await Question.find({userID: userID});
+
+        // Total count
+        let total = questions.length;
+
+        // Breakdown by difficulty
+        let easy = questions.filter(q=>q.difficulty==='Easy').length;
+        let medium = questions.filter(q=>q.difficulty==='Medium').length;
+        let hard = questions.filter(q=>q.difficulty==='Hard').length;
+
+        // Top companies
+        let companyCounts={};
+        for(let question of questions){
+            let company=question.company || 'Unknown';
+            if(companyCounts[company]){
+                companyCounts[company]++;
+            }
+            else{
+                companyCounts[company]=1;
+            }
+        }
+
+        // Top topics
+        let topicCounts={};
+        for(let question of questions){
+            let topic=question.topic || 'Unknown';
+            if(topicCounts[topic]){
+                topicCounts[topic]++;
+            }
+            else{
+                topicCounts[topic]=1
+            }
+        }
+
+        // Recent 5 questions
+        let recent=questions
+            .sort(function(a, b){
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            })
+            .slice(0, 5)
+            .map(function(q){
+                return {
+                    title: q.title,
+                    company: q.company,
+                    difficulty: q.difficulty,
+                    createdAt: q.createdAt
+                };
+            });
+
+        res.json({
+            message: 'Stats fetched successfully!',
+            stats: {
+                total: total,
+                difficulty: {easy, medium, hard},
+                companyCounts: companyCounts,
+                topicCounts: topicCounts,
+                recent: recent
+            }
+        });
+
+    } catch(error){
+        console.log('Stats error:', error);
+        res.json({message: 'Something went wrong.'});
+    }
+});
+
 // GET /api/questions - protected route
 router.get('/', protect,  async function(req,res){
     try {
@@ -71,4 +143,5 @@ router.delete('/:id', protect, async function(req, res){
         res.json({message: 'Something went wrong.'});
     }
 });
+
 module.exports=router;
