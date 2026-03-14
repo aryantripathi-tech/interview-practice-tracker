@@ -7,6 +7,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav style="
+    background-color: #1e40af;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;">
+
+        <span style="color: white; font-weight: bold; font-size: 18px;">
+            🎯 Interview Tracker
+        </span>
+        <div style="display: flex; gap: 12px;">
+            <a href="dashboard.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                Dashboard
+            </a>
+            <a href="stats.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                Stats
+            </a>
+            <a href="questions.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                + Add Question
+            </a>
+            <a href="#" onclick="logout()"
+                style="color: #fca5a5; text-decoration: none; font-size: 14px;">
+                Logout
+            </a>
+        </div>
+    </nav>
     
     <div class="container">
 
@@ -52,9 +82,28 @@
         // Show username on page
         document.querySelector('h1').textContent = 'Hello, ' + userName + ' - Log a Question';
 
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        }
+    
         // Hadle form submission
         document.getElementById("questionForm").addEventListener("submit", function(event){
             event.preventDefault();
+
+            let title =document.getElementById('title').value.trim();
+
+            // Validate required field
+            if(!title){
+                alert('Question title is required.');
+                return;
+            }
+
+            let btn = document.querySelector('button[type="submit"]');
+            btn.textContent='Saving...';
+            btn.disabled=true;
 
             let question={
                 title:document.getElementById("title").value,
@@ -79,10 +128,11 @@
 
             .then(function(data) {
                 if(data.message === 'Question saved successfully!'){
-                    alert('Question saved!');
                     window.location.href = 'dashboard.html';
                 } else{
                     alert(data.message);
+                    btn.textContent='Save Question';
+                    btn.disabled=false;
                 }
             })
 

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Interview Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+        <p style="color: #64748b; margin-bottom: 24px;">
+            Start tracking your interview preparation
+        </p>
+
+        <div>
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Aryan Tripathi">
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="aryan@gmail.com">
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min 8 characters">
+        </div>
+        
+        <div>
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Repeat password">
+        </div>
+
+        <p id="errorMsg" style="color: #dc2626; display: none;"></p>
+
+        <button id="signupBtn" onclick="handleSignup()">
+            Create Account
+        </button>
+
+        <p style="margin-top: 16px; text-align: center; color: #64748b;">
+            Already have an account?
+            <a href="login.html" style="color: #1e40af;">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        const BASE_URL='http://localhost:3000';
+
+        // Redirect if already logged in
+        let token = localStorage.getItem('token');
+        if(token){
+            window.location.href='dashboard.html';
+        }
+
+        function showError(message){
+            let errorMsg=document.getElementById('errorMsg');
+            errorMsg.textContent=message;
+            errorMsg.style.display='block';
+        }
+
+        function hideError(){
+            document.getElementById('errorMsg').style.display='none'
+        }
+
+        function handleSignup(){
+            hideError();
+
+            let name = document.getElementById('name').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Frontend validation
+            if(!name){
+                return showError('Please enter you name.');
+            }
+            if(!email){
+                return showError('Please enter you email.');
+            }
+            if(password.length<8){
+                return showError('Password must be at least 8 characters.');
+            }
+            if(password !== confirmPassword){
+                return showError('Passwords do not match');
+            }
+
+            // Disable button while request is in progress
+            let btn = document.getElementById('signupBtn');
+            btn.textContent = 'Creating account...';
+            btn.disabled = true;
+
+            fetch(BASE_URL + '/api/auth/signup',{
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, email, password})
+            })
+            .then(function(response){
+                return response.json();
+            })
+
+            .then(function(data){
+                if(data.user){
+                    alert('Account created! Please login.');
+                    window.location.href='login.html';
+                }
+                else{
+                    showError(data.message);
+                    btn.textContent='Create Account';
+                    btn.disabled=false;
+                }
+            })
+            .catch(function(error){
+                console.log('Error:',error);
+                showError('Could not connect to server.');
+                btn.textContent='Create Account';
+                btn.disabled=false;
+            });
+        }
+    </script>
+</body>
+</html>

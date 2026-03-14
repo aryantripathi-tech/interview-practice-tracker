@@ -9,34 +9,68 @@
 <body>
     <div class="container">
 
-        <h1>Interview Tracker</h1>
-        <h2>Login to your account</h2>
+        <h1>Welcome Backr</h1>
+        <p style="color: #64748b; margin-bottom: 24px;">
+            Login to your interview tracker
+        </p>
 
-        <form action="" id="loginForm">
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="aryan@gmail.com">
+        </div>
 
-            <label for="">Email</label>
-            <input type="email" id="email" placeholder="Enter your email">
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Your password">
+        </div>
 
-            <label for="">Password</label>
-            <input type="password" id="password" placeholder="Enter your password">
+        <p id="errorMsg" style="color: #dc2626; display: none;"></p>
 
-            <button type="submit">Login</button>
+        <button id="loginBtn" onclick="handleLogin()">Login</button>
 
-        </form>
-
-        <p>Don't have an account? <a href="#">Sign up</a></p>
-        
+        <p style="margin-top: 16px; text-align: center; color: #64748b;">
+            Don't have an account? 
+            <a href="signup.html" style="color: #1e40af;">Sign up here</a>
+        </p>
     </div>
 
     <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event){
-            event.preventDefault();
+        const BASE_URL= 'http://localhost:3000';
 
-            // Collect form data
-            let email=document.getElementById("email").value;
-            let password=document.getElementById("password").value;
+        // Redirect if already logged in
+        let token = localStorage.getItem('token');
+        if(token){
+            window.location.href='dasboard.html';
+        }
 
-            const BASE_URL= 'http://localhost:3000';
+        function showError(message){
+            let errorMsg=document.getElementById('erroeMsg');
+            errorMsg.textContent=message;
+            errorMsg.style.display='block';
+        }
+
+        function hideError(){
+            document.getElementById('errorMsg').style.display='none';
+        }
+
+        function handleLogin(){
+            hideError();
+            let email=document.getElementById('email').value.trim();
+            let password=document.getElementById('password').value;
+
+            // Frontend validation
+            if(!email){
+                return showError('Please enter your email.');
+            }
+            if(!password){
+                return showError('Please enter your password.');
+            }
+
+            // Disable button
+            let btn=document.getElementById('loginBtn');
+            btn.textContent='Logging in...';
+            btn.disabled=true;
+        
 
             // Send to backend
             fetch(BASE_URL+'/api/auth/login', {
@@ -62,21 +96,21 @@
                     localStorage.setItem('token',data.token);
                     localStorage.setItem('userID',data.user.id);
                     localStorage.setItem('userName',data.user.name);
-
-                    // Redirect to question page
-                    alert('Welcome back, ' + data.user.name + '!');
-                    window.location.href = 'questions.html';
+                    window.location.href='dashboard.html';
                 } else{
-                    alert(data.message);
+                    showError(data.message);
+                    btn.textContent='Login';
+                    btn.disabled=false;
                 }
             })
-
             // Handle errors
             .catch(function(error){
                 console.log('Error:', error);
-                alert('Could not connect to server');
+                showError('Could not connect to server');
+                btn.textContent='Login';
+                btn.disabled=false;
             });
-        });
+        }
     </script>
 </body>
 </html>

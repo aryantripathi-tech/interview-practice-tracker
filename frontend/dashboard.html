@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav style="
+    background-color: #1e40af;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;">
+
+        <span style="color: white; font-weight: bold; font-size: 18px;">
+            🎯 Interview Tracker
+        </span>
+        <div style="display: flex; gap: 12px;">
+            <a href="dashboard.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                Dashboard
+            </a>
+            <a href="stats.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                Stats
+            </a>
+            <a href="questions.html"
+                style="color: #93c5fd; text-decoration: none; font-size: 14px;">
+                + Add Question
+            </a>
+            <a href="#" onclick="logout()"
+                style="color: #fca5a5; text-decoration: none; font-size: 14px;">
+                Logout
+            </a>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>My Interview Questions</h1>
         <p id="subtitle">Loading your questions...</p>
@@ -64,6 +95,8 @@
         }
 
         document.querySelector('h1').textContent = userName + "'s Questions";
+
+        document.getElementById('subtitle').textContent='Loading your questions...';
 
         // Fetch all questions
         fetch(BASE_URL + '/api/questions', {
