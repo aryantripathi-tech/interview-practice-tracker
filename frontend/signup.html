@@ -41,7 +41,7 @@
 
         <p style="margin-top: 16px; text-align: center; color: #64748b;">
             Already have an account?
-            <a href="login.html" style="color: #1e40af;">Login here</a>
+            <a href="index.html" style="color: #1e40af;">Login here</a>
         </p>
     </div>
 
@@ -103,7 +103,7 @@
             .then(function(data){
                 if(data.user){
                     alert('Account created! Please login.');
-                    window.location.href='login.html';
+                    window.location.href='index.html';
                 }
                 else{
                     showError(data.message);
