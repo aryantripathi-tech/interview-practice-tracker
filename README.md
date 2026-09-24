@@ -30,7 +30,7 @@ A full-stack web application for engineering students to log, organize, and anal
 ```
 interview-practice-tracker/
 ├── frontend/
-│   ├── login.html          # Login page
+│   ├── index.html          # Login page
 │   ├── signup.html         # Signup page
 │   ├── questions.html      # Add question form
 │   ├── dashboard.html      # View and manage questions
@@ -81,7 +81,7 @@ PORT=3000
 npm run dev
 ```
 
-5. Open `frontend/login.html` with Live Server in VS Code
+5. Open `frontend/index.html` with Live Server in VS Code
 
 ## 🔐 API Endpoints
 
